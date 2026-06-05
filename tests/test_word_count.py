@@ -106,3 +106,21 @@ def test_corpus_counter_save_csv(tmp_path):
     assert my_csv.is_file()
     expected_csv = "token,count\na,2\nb,1\nc,1\nx,1\ny,1\nz,1\n"
     assert my_csv.read_text() == expected_csv
+
+def test_get_top_n_tokens():
+    cc = word_count.CorpusCounter()
+
+    cc.add_doc("apple banana apple")
+    cc.add_doc("orange banana apple")
+    
+    top_2 = cc.get_top_n_tokens(2)
+    
+    expected_top_2 = [("apple", 3), ("banana", 2)]
+    assert top_2 == expected_top_2
+    assert len(top_2) == 2
+
+    all_tokens = cc.get_top_n_tokens(10)
+    assert len(all_tokens) == 3
+    assert all_tokens[0] == ("apple", 3)
+    assert all_tokens[-1] == ("orange", 1)
+
